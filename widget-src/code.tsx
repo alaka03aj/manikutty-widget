@@ -1,17 +1,13 @@
 const { widget } = figma
 const { AutoLayout, Text, Input, useSyncedState } = widget
 
-type VerticalHorizontalPadding = {
-  vertical?: number
-  horizontal?: number
-}
-
 const Timer = () => {
   const lightMode = {
     background: "#FFFFFF",
     button: "#000000",
     text: "#000000",
-    buttonText: "#FFFFFF"
+    buttonText: "#FFFFFF",
+    buttonRed: "DD0000"
   }
 
   const darkMode = {
@@ -21,13 +17,14 @@ const Timer = () => {
   }
 
   const font = "Space Mono"
-
-  const padding: VerticalHorizontalPadding = { vertical: 45, horizontal: 70 }
-
   const [seconds, setSeconds] = useSyncedState("seconds", "0")
+  const [started, setStarted] = useSyncedState("started", false)
 
+  const handleStart = () => {
+    setStarted(!started)
+  }
   return (
-    <AutoLayout fill={lightMode.background} width={400} height={200} padding={padding} spacing={10}>
+    <AutoLayout fill={lightMode.background} width={400} height={200} padding={{ vertical: 45, horizontal: 70 }} spacing={10}>
 
       <AutoLayout direction="horizontal" spacing={8}>
         {/* for taking input & buttons */}
@@ -48,8 +45,11 @@ const Timer = () => {
           }}
           inputBehavior="wrap"
         />
-        <AutoLayout width={76} height={30} fill={lightMode.button} padding={{ vertical: 6, horizontal: 22 }} cornerRadius={3} spacing={"auto"}>
-          <Text fontFamily={font} fill={lightMode.buttonText} fontSize={12}>START</Text>
+
+        <AutoLayout width={76} height={30} fill={ started ? lightMode.buttonRed : lightMode.button } padding={{ vertical: 6, horizontal: 22 }} cornerRadius={3} spacing={"auto"} 
+          onClick={handleStart}>
+          <Text fontFamily={font} fill={lightMode.buttonText} fontSize={12} hidden={ started ? true : false }>START</Text>
+          <Text fontFamily={font} fill={lightMode.buttonText} fontSize={12} hidden={ started ? false : true }>STOP</Text>
         </AutoLayout>
       </AutoLayout>
 
